@@ -19,11 +19,13 @@ This npm script changes behaviour of Postman application to be used *locally (wi
 `node postman-scratchpatcher.js`
 
 ### After executing you *will see* the following:
-[Postman Scratchpad Mode](docs/postman-scratchpad-mode.png)
+![Postman Scratchpad Mode](docs/postman-scratchpad-mode.png)
 
 ### After executing you *will not see* the following:
-[Scratch Pad is being discontinued sign up to continue using collections](docs/Scratch-Pad-is-being-discontinued-sign-up-to-continue-using-collections.png)
-[Unlock Postman with an account](docs/Unlock-Postman-with-an-account.png)
-[Lightweight API Client](docs/Lightweight-API-Client.png)
+![Scratch Pad is being discontinued sign up to continue using collections](docs/Scratch-Pad-is-being-discontinued-sign-up-to-continue-using-collections.png)
+
+![Unlock Postman with an account](docs/Unlock-Postman-with-an-account.png)
+
+![Lightweight API Client](docs/Lightweight-API-Client.png)
 
 
