@@ -28,4 +28,4 @@ This npm script changes behaviour of Postman application to be used *locally (wi
 
 ![Lightweight API Client](docs/Lightweight-API-Client.png)
 
-
+![Scratchpad Info Bar](docs/scratchpad-info-bar.png)
