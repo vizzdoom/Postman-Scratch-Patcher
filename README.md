@@ -14,9 +14,16 @@ This npm script changes behaviour of Postman application to be used *locally (wi
 - Postman installed and run at least once
 
 ## How-to
-`npm install -g asar`
+1. Install the latest version of Postman (Windows 64-bit) from the official website.
+   - run Postman at least once before this script
 
-`node postman-scratchpatcher.js`
+2. `npm install -g asar`
+
+3. `node postman-scratchpatcher.js`
+
+4. You can run Postman in the offline Scratch Pad mode.
+
+5. Consider turning-off an auto-update feature (you have to use Postman-Scratch-Patcher after an update).
 
 ### After executing you *will see* the following:
 ![Postman Scratchpad Mode](docs/postman-scratchpad-mode.png)
