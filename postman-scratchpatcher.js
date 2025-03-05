@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const asar = require('asar');
 const { execSync } = require('child_process')
-const STORAGE_DIR_PATH = path.join(process.env.APPDATA, 'Postman', 'Storage');
+const POSTMAN_REMOTEAPPDATA = path.join(process.env.APPDATA, 'Postman',)
+const STORAGE_DIR_PATH = path.join(POSTMAN_REMOTEAPPDATA, 'Storage');
 const STORAGE_FILE_PATH = path.join(STORAGE_DIR_PATH, 'userPartitionData.json');
 const POSTMAN_LOCALAPPDATA = path.join(process.env.LOCALAPPDATA, "Postman");
 const USER_PARTITION_DATA_CONTENT =
@@ -75,7 +75,6 @@ function extractAsar(asarFilePath, asarExtractedDirPath){
 		process.exit(3);
 	}
 	try {
-		//await asar.extractAll(asarFilePath, asarExtractedDirPath);
 		console.log(`asar extract "${asarFilePath}" "${asarExtractedDirPath}"`);
 		var output = execSync(`asar extract "${asarFilePath}" "${asarExtractedDirPath}"`).toString();
 		console.log(output);
@@ -94,7 +93,6 @@ function createPackage(asarExtractedDirPath, asarFilePath){
 		console.log("[+] Deleted");
 	}
 	try {
-		//await asar.createPackage(asarExtractedDirPath, asarFilePath);
 		execSync(`asar pack "${asarExtractedDirPath}" "${asarFilePath}"`);
 		console.log(`[+] Created asar file ${asarFilePath} from the directory ${asarExtractedDirPath}`);
 	} catch (error) {
@@ -105,8 +103,19 @@ function createPackage(asarExtractedDirPath, asarFilePath){
 
 
 function main() {
+	console.log("[i] STARTING POSTMAN PATCH PROCESS - SANITY CHECKS");
 	sanityCheck();
+
+	console.log("[i] Writing config for turning in the Scratch Pad mode");
 	writeTxt(STORAGE_FILE_PATH, USER_PARTITION_DATA_CONTENT, overwrite = true);
+
+	var lightweightClientIndicatorPath = path.join(POSTMAN_REMOTEAPPDATA, "Partitions");
+	console.log(`[+] Removing Lightweight Client Indicator directory to disable Lightweight HTTP Client mode: ${lightweightClientIndicatorPath}`);
+	var removeLightweightClientIndicator = `rm -f -R --interactive=never "${lightweightClientIndicatorPath}"`;
+	console.log(removeLightweightClientIndicator);
+	console.log(execSync(removeLightweightClientIndicator).toString());
+	
+	console.log("[i] Decompressing application");
 	let appDirectoryPath = path.join(POSTMAN_LOCALAPPDATA, getLatestAppDirectory());
 	console.log(`Detected appDirectoryPath: ${appDirectoryPath}`);
 	let appAsarFilePath = path.join(appDirectoryPath, "resources", "app.asar");
