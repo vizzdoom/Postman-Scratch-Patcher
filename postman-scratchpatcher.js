@@ -9,6 +9,9 @@ const USER_PARTITION_DATA_CONTENT =
 `{"migrationCompleted":true,"partitions":{},"users":{},"v8PartitionsNamespaceMeta":{"users":{"activePartition":null}},"v8Partitions":{"0446a2bf-1dc7-4dfd-b12d-6fd568013cac":{"context":{"namespace":"scratchPad","userId":0,"teamId":0},"meta":{"isDirty":false}}}}`;
 const SCRATCHPAD_PAYLOAD = `/*SCRATCHPATCHER*/function waitForOverlay(){let e=setInterval(()=>{document.querySelector(".ReactModal__Overlay--after-open")&&(pm.mediator.trigger("hideUserSwitchingExperienceModal"),document.querySelector(".requester-scratchpad-info-container").remove(),clearInterval(e))},200)}waitForOverlay();`;
 
+const removeLightweight = process.argv.includes('--remove-lightweight');
+const help = process.argv.includes('--help') || process.argv.includes('-h');
+const patch = process.argv.includes("patch");
 
 function sanityCheck(){
 	if (!fs.existsSync(STORAGE_DIR_PATH)) {
@@ -165,15 +168,31 @@ function patchApplication_packModifiedApp(asarExtractedDirPath, appAsarFilePath)
 }
 
 
+function showHelp(){
+		console.log("This program patches Postman to enable Scratch Pad mode for working without online services.");
+		console.log("Usage: node postman-scratchpather.js patch [--remove-lightweight] [--help]");
+		console.log("\t--remove-lightweight:\tdisables lightweight HTTP client mode and activates Scratch Pad");
+		console.log("\t\t\t\t**it will remove all your local collections and environments**");
+		process.exit(0);
+}
+
+
 function main() {
+	if (help || !patch){
+		showHelp();
+	}
 	console.log("\n=== SANITY CHECKS ===");
 	sanityCheck();
 
 	console.log("\n=== TURNING ON A SCRATCH PAD MODE ===");
 	writeTxt(STORAGE_FILE_PATH, USER_PARTITION_DATA_CONTENT, overwrite = true);
 
-	console.log(`\n=== DISABLE LIGHTWEIGH HTTP CLIENT MODE ===`);
-	removeLightweightClientMode();
+	if (removeLightweight) {
+		console.log("\n=== DISABLE LIGHTWEIGH HTTP CLIENT MODE (--remove-lightweight) ===");
+		removeLightweightClientMode();
+	} else {
+		console.log("\n=== SKIPPING REMOVING OF A LIGHTWEIGH HTTP CLIENT MODE (can be turned on by --remove-lightweight) ===");
+	}
 	
 	patchApplication();
 
