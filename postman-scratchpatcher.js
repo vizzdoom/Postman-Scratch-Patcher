@@ -7,11 +7,11 @@ const STORAGE_FILE_PATH = path.join(STORAGE_DIR_PATH, 'userPartitionData.json');
 const POSTMAN_LOCALAPPDATA = path.join(process.env.LOCALAPPDATA, "Postman");
 const USER_PARTITION_DATA_CONTENT =
 `{"migrationCompleted":true,"partitions":{},"users":{},"v8PartitionsNamespaceMeta":{"users":{"activePartition":null}},"v8Partitions":{"0446a2bf-1dc7-4dfd-b12d-6fd568013cac":{"context":{"namespace":"scratchPad","userId":0,"teamId":0},"meta":{"isDirty":false}}}}`;
-const SCRATCHPAD_PAYLOAD = `/*SCRATCHPATCHER*/function waitForOverlay(){let e=setInterval(()=>{document.querySelector(".ReactModal__Overlay--after-open")&&(pm.mediator.trigger("hideUserSwitchingExperienceModal"),document.querySelector(".requester-scratchpad-info-container").remove(),clearInterval(e))},200)}waitForOverlay();`;
-
-const removeLightweight = process.argv.includes('--remove-lightweight');
-const help = process.argv.includes('--help') || process.argv.includes('-h');
-const patch = process.argv.includes("patch");
+const SCRATCHPAD_PAYLOAD_MARKER = "/*SCRATCHPATCHER*/";
+const SCRATCHPAD_PAYLOAD = SCRATCHPAD_PAYLOAD_MARKER + `interval=setInterval(()=>{if(document.querySelector(".switching-to-offlineAPIClient")){pm.mediator.trigger("hideUserSwitchingExperienceModal");document.querySelector(".requester-scratchpad-info-container").remove();clearInterval(interval);}},200);`;
+const SWITCH_REMOVE_LIGHTWEIGHT = process.argv.includes('--remove-lightweight');
+const SWITCH_HELP = process.argv.includes('--help') || process.argv.includes('-h');
+const SWITCH_PATCH = process.argv.includes("patch");
 
 function sanityCheck(){
 	if (!fs.existsSync(STORAGE_DIR_PATH)) {
@@ -29,7 +29,7 @@ function sanityCheck(){
 
 	console.log("[i] Checking if asar command is installed in the system via 'npm install -g asar'");
 	try {
-		console.log("Found " + execSync('asar --version').toString());
+		executeOsCommand('asar --version');
 	} catch (error) {
 		console.error("[-] Cannot execute asar command. Please install via: npm install -g asar");
 		process.exit(3);
@@ -37,9 +37,9 @@ function sanityCheck(){
 
 	console.log("[i] Killing all 'Postman.exe' with child processes and tear-down few seconds");
 	try {
-		execSync(`taskkill /F /IM Postman.exe /T`, { stdio: 'ignore'});
-		console.log("Tear-down...")
-		execSync(`sleep 3`, { stdio: 'ignore'});	
+		executeOsCommand(`taskkill /F /IM Postman.exe /T`, { stdio: 'ignore'});
+		console.log("Tear-down...");
+		executeOsCommand(`sleep 3`, { stdio: 'ignore'});
 	} catch (error){
 		console.log("[+] Killed")
 	}
@@ -55,6 +55,14 @@ function writeTxt(filePath, content, overwrite = false){
 		console.error(`Failed to write to the ${filePath}: ${error}`);
 		process.exit(4);
 	}
+}
+
+
+function executeOsCommand(cmd, options = {}){
+	console.log(`[i] System command execution in progress: ${cmd}`);
+	var output = execSync(cmd, options).toString();
+	console.log(output);
+	return output;
 }
 
 
@@ -81,7 +89,7 @@ function createPackage(asarExtractedDirPath, asarFilePath){
 		console.log("[+] Deleted");
 	}
 	try {
-		execSync(`asar pack "${asarExtractedDirPath}" "${asarFilePath}"`);
+		executeOsCommand(`asar pack "${asarExtractedDirPath}" "${asarFilePath}"`);
 		console.log(`[+] Created asar file ${asarFilePath} from the directory ${asarExtractedDirPath}`);
 	} catch (error) {
 			console.log(`[-] Failed to create ASAR package ${asarFilePath} from the directory ${asarExtractedDirPath}`);
@@ -137,9 +145,8 @@ function patchApplication_decompressApp(asarFile, asarExtractedDir){
 		process.exit(6);
 	}
 	try {
-		console.log(`asar extract "${asarFile}" "${asarExtractedDir}"`);
-		var output = execSync(`asar extract "${asarFile}" "${asarExtractedDir}"`).toString();
-		console.log(output);
+		var command = `asar extract "${asarFile}" "${asarExtractedDir}"`;
+		executeOsCommand(command);
 		console.log(`[+] Extracted ${asarFile} into ${asarExtractedDir}`);
 	} catch (error) {
 		console.log(`[-] Failed to extract ASAR ${asarFile} file: ${error.message}`);
@@ -151,8 +158,8 @@ function patchApplication_decompressApp(asarFile, asarExtractedDir){
 function patchApplication_injectPayload(payloadFilePath){
 	fileContent = fs.readFileSync(payloadFilePath, 'utf8')
 	let lines = fileContent.split("\n")
-	if (lines[lines.length - 1].trim().startsWith('/*SCRATCHPATCHER*/')){
-		console.log("Removing old /*SCRATCHPATCHER*/ payload");
+	if (lines[lines.length - 1].trim().startsWith(SCRATCHPAD_PAYLOAD_MARKER)){
+		console.log(`[i] Found ${SCRATCHPAD_PAYLOAD_MARKER} payload marker. Removing old payload.`);
 		lines.pop();
 	}
 	lines.push(SCRATCHPAD_PAYLOAD);
@@ -178,7 +185,7 @@ function showHelp(){
 
 
 function main() {
-	if (help || !patch){
+	if (SWITCH_HELP || !SWITCH_PATCH){
 		showHelp();
 	}
 	console.log("\n=== SANITY CHECKS ===");
@@ -187,7 +194,7 @@ function main() {
 	console.log("\n=== TURNING ON A SCRATCH PAD MODE ===");
 	writeTxt(STORAGE_FILE_PATH, USER_PARTITION_DATA_CONTENT, overwrite = true);
 
-	if (removeLightweight) {
+	if (SWITCH_REMOVE_LIGHTWEIGHT) {
 		console.log("\n=== DISABLE LIGHTWEIGH HTTP CLIENT MODE (--remove-lightweight) ===");
 		removeLightweightClientMode();
 	} else {
