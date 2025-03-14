@@ -1,13 +1,13 @@
 # Postman Scratch Patcher
 
+<img src="docs/logo.png" alt="Logo" width="256">
+
 This node script changes behavior of a Postman application to be used locally (without online services) in a following way:
 - sets environment to work on scratchpad with collections (even when Postman is in the "Lighweight API Client mode")
 - disables "ScratchPad is obsolete" pop-ups
 - disables yellow top bar informing that you are "Working locally in Scratch pad. Switch to WORKSPLACE"
 
 *REMARK: Your local Scratch Pad collections **will be removed** after executing this script (at least for now)*
-
-<img src="docs/logo.png" alt="Logo" width="300">
 
 ## Requirements
 - *Windows* (this script do not work on Linux at this moment)
