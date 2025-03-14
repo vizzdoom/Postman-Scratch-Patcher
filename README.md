@@ -1,6 +1,6 @@
 # Postman Scratch Patcher
 
-This npm script changes behaviour of Postman application to be used *locally (without online services)* in following way:
+This node script changes behavior of a Postman application to be used locally (without online services) in a following way:
 - sets environment to work on scratchpad with collections (even when Postman is in the "Lighweight API Client mode")
 - disables "ScratchPad is obsolete" pop-ups
 - disables yellow top bar informing that you are "Working locally in Scratch pad. Switch to WORKSPLACE"
