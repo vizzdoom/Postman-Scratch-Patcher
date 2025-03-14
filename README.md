@@ -1,4 +1,4 @@
-# Postman-Scratch-Patcher
+# Postman Scratch Patcher
 
 This npm script changes behaviour of Postman application to be used *locally (without online services)* in following way:
 - sets environment to work on scratchpad with collections (even when Postman is in the "Lighweight API Client mode")
