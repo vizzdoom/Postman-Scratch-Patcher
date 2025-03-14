@@ -177,7 +177,7 @@ function patchApplication_packModifiedApp(asarExtractedDirPath, appAsarFilePath)
 
 function showHelp(){
 		console.log("This program patches Postman to enable Scratch Pad mode for working without online services.");
-		console.log("Usage: node postman-scratchpather.js patch [--remove-lightweight] [--help]");
+		console.log("Usage: node postman-scratchpather.js patch [--remove-lightweight] [-h|--help]");
 		console.log("\t--remove-lightweight:\tdisables lightweight HTTP client mode and activates Scratch Pad");
 		console.log("\t\t\t\t**it will remove all your local collections and environments**");
 		process.exit(0);
