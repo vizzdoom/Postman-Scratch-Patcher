@@ -10,9 +10,9 @@ This node script changes behavior of a Postman application to be used locally (w
 *REMARK: Your local Scratch Pad collections **will be removed** after executing this script (at least for now)*
 
 ## Requirements
-- *Windows* (this script do not work on Linux at this moment)
-- nodejs (in the PATH)
-- asar (in the PATH, you can install this using: npm install -g asar)
+- *Windows* (at this moment you can't patch Postman for Linux)
+- node (command available in the PATH)
+- asar (command available in the PATH, you can install this npm package by: npm install -g asar)
 - Postman installed and run at least once
 
 ## How-to
