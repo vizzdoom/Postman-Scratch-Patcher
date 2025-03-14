@@ -7,6 +7,8 @@ This npm script changes behaviour of Postman application to be used *locally (wi
 
 *REMARK: Your local Scratch Pad collections **will be removed** after executing this script (at least for now)*
 
+<img src="docs/logo.png" alt="Logo" width="300">
+
 ## Requirements
 - *Windows* (this script do not work on Linux at this moment)
 - nodejs (in the PATH)
