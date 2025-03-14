@@ -1,6 +1,6 @@
-# Postman-Scratch-Patcher
+# Postman Scratch Patcher
 
-This npm script changes behaviour of Postman application to be used *locally (without online services)* in following way:
+This node script changes behavior of a Postman application to be used locally (without online services) in a following way:
 - sets environment to work on scratchpad with collections (even when Postman is in the "Lighweight API Client mode")
 - disables "ScratchPad is obsolete" pop-ups
 - disables yellow top bar informing that you are "Working locally in Scratch pad. Switch to WORKSPLACE"
@@ -16,16 +16,18 @@ This npm script changes behaviour of Postman application to be used *locally (wi
 - Postman installed and run at least once
 
 ## How-to
-1. Install the latest version of Postman (Windows 64-bit) from the official website.
-   - run Postman at least once before this script
+**Step 1.** Install the latest version of Postman (Windows 64-bit) from the official website (run Postman at least once before this script)
 
-2. `npm install -g asar`
+**Step 2.** Install dependencies: `npm install -g asar`
 
-3. `node postman-scratchpatcher.js`
+**Step 3.** Execute a script
+- `node postman-scratchpatcher.js -h` shows help
+- `node postman-scratchpatcher.js patch` patches a Postman to work in Scratch Pad offline mode
+- `node postman-scratchpatcher.js patch --remove-lightweight` patches a Postman and removes a "Lightweight HTTP mode". *THIS REMOVES YOUR SAVED COLLECTIONS AND ENVIRONMENTS"
 
-4. You can run Postman in the offline Scratch Pad mode.
+**_Now, you can run a Postman in the offline Scratch Pad mode._**
 
-5. Consider turning-off an auto-update feature (you have to use Postman-Scratch-Patcher after an update).
+You have to use Postman-Scratch-Patcher after an update. You can REALLY disable updates by removing a file `%localappdata%\Postman\Update.exe`
 
 ### After executing you *will see* the following:
 ![Postman Scratchpad Mode](docs/postman-scratchpad-mode.png)
